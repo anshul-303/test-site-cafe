@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>Bangalore Serenity | Authentic South Indian Cafe</title>
+    <!-- Tailwind CSS + Google Fonts + Font Awesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Poppins for modern look, plus serif for touch -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&family=Playfair+Display:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome 6 (free) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        scroll-behavior: smooth;
+      }
+      h1,
+      h2,
+      h3,
+      .serif-head {
+        font-family: "Playfair Display", serif;
+      }
+      /* custom olive green theme */
+      .bg-olive-light {
+        background-color: #f4f7ec;
+      }
+      .bg-olive-deep {
+        background-color: #2c3e1f;
+      }
+      .text-olive {
+        color: #2c3e1f;
+      }
+      .border-olive {
+        border-color: #4b6b2d;
+      }
+      .hover\:shadow-olive:hover {
+        box-shadow: 0 20px 25px -12px rgba(60, 80, 30, 0.25);
+      }
+      /* card scale up/down transition */
+      .menu-card {
+        transition:
+          transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1),
+          box-shadow 0.3s ease;
+      }
+      .menu-card:hover {
+        transform: scale(1.03) translateY(-6px);
+        box-shadow: 0 25px 30px -12px rgba(0, 0, 0, 0.25);
+      }
+      /* hero random background - will be set via JS */
+      .hero-overlay {
+        background: linear-gradient(
+          135deg,
+          rgba(44, 62, 31, 0.82) 0%,
+          rgba(30, 45, 20, 0.7) 100%
+        );
+      }
+      /* custom scroll */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #e9f0e0;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #4b6b2d;
+        border-radius: 20px;
+      }
+    </style>
+  </head>
+  <body class="bg-olive-light text-gray-800">
+    <div id="root"></div>
+
+    <!-- React & ReactDOM & Babel Standalone for simplicity -->
+    <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+      // ---------- RANDOM BACKGROUND IMAGES (South Indian / cafe themed)
+      const heroBackgrounds = [
+        "https://images.unsplash.com/photo-1589301760014-37c6e4b994f6?w=1600&h=900&fit=crop",
+        "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=1600&h=900&fit=crop",
+        "https://images.unsplash.com/photo-1627662053366-3b2c004549e0?w=1600&h=900&fit=crop",
+        "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=1600&h=900&fit=crop",
+        "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1600&h=900&fit=crop",
+        "https://images.unsplash.com/photo-1505253758473-96b7015fcd40?w=1600&h=900&fit=crop",
+      ];
+
+      // Function to get random background
+      const getRandomHeroBg = () => {
+        return heroBackgrounds[
+          Math.floor(Math.random() * heroBackgrounds.length)
+        ];
+      };
+
+      // ---------- MENU DATA (Dosas, Uttapams, Coffees) with background images
+      // All descriptions trimmed to similar length for consistent card heights
+      const menuItems = {
+        dosas: [
+          {
+            id: 1,
+            name: "Masala Dosa",
+            desc: "Crispy golden crepe filled with spiced potato & onion, served with coconut chutney.",
+            price: "₹149",
+            bgImg:
+              "https://images.unsplash.com/photo-1589301760014-37c6e4b994f6?w=600&h=400&fit=crop",
+          },
+          {
+            id: 2,
+            name: " Roast Dosa",
+            desc: "Extra crispy dosa roasted with pure ghee, aromatic & melt-in-mouth texture.",
+            price: "₹179",
+            bgImg:
+              "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=600&h=400&fit=crop",
+          },
+          {
+            id: 3,
+            name: "Ghee Podi Masala Dosa",
+            desc: "Fusion delight with soft paneer & mild butter masala, crunchy golden edges.",
+            price: "₹199",
+            bgImg:
+              "https://images.unsplash.com/photo-1633326649638-3b8f5faf1b9f?w=600&h=400&fit=crop",
+          },
+          {
+            id: 4,
+            name: "Onion Rava Dosa",
+            desc: "Semolina based crispy dosa topped with fresh onions & bell peppers.",
+            price: "₹159",
+            bgImg:
+              "https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?w=600&h=400&fit=crop",
+          },
+        ],
+        uttapams: [
+          {
+            id: 5,
+            name: "Classic Onion Uttapam",
+            desc: "Thick, fluffy pancake loaded with caramelized onions, tomatoes & green chilies.",
+            price: "₹139",
+            bgImg:
+              "https://images.unsplash.com/photo-1634096402874-1c3c0d6e4f83?w=600&h=400&fit=crop",
+          },
+          {
+            id: 6,
+            name: "Mixed Veg Uttapam",
+            desc: "Loaded with carrots, peas, bell peppers & corn - wholesome & tasty.",
+            price: "₹159",
+            bgImg:
+              "https://images.unsplash.com/photo-1653597229008-fa1facf95027?w=600&h=400&fit=crop",
+          },
+          {
+            id: 7,
+            name: "Cheese Corn Uttapam",
+            desc: "Indo fusion with melted cheese & sweet corn, kid's favorite dish!",
+            price: "₹179",
+            bgImg:
+              "https://images.unsplash.com/photo-1625938144755-653c3daae85e?w=600&h=400&fit=crop",
+          },
+          {
+            id: 8,
+            name: "Masala Corn Uttapam",
+            desc: "Indo fusion with melted cheese & authentic masala, a traditional delicacy!",
+            price: "₹169",
+            bgImg:
+              "https://images.unsplash.com/photo-1625938144755-653c3daae85e?w=600&h=400&fit=crop",
+          },
+        ],
+        coffees: [
+          {
+            id: 9,
+            name: "Filter Coffee (Hot)",
+            desc: "Traditional South Indian filter kaapi, rich froth & aromatic decoction.",
+            price: "₹55",
+            bgImg:
+              "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&h=400&fit=crop",
+          },
+          {
+            id: 10,
+            name: "Cold Coffee",
+            desc: "Chilled creamy coffee blended with milk & hint of chocolate, refreshing.",
+            price: "₹85",
+            bgImg:
+              "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&h=400&fit=crop",
+          },
+          {
+            id: 11,
+            name: "Iced Filter Coffee",
+            desc: "Signature filter coffee served over ice, bold flavor & never diluted.",
+            price: "₹95",
+            bgImg:
+              "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&h=400&fit=crop",
+          },
+          {
+            id: 12,
+            name: "Black Coffee",
+            desc: "A diet-conscious beverage for health-conscious individuals!",
+            price: "₹65",
+            bgImg:
+              "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&h=400&fit=crop",
+          },
+        ],
+      };
+
+      // Card Component with consistent height and aligned elements
+      const MenuCard = ({ item, category }) => {
+        return (
+          <div className="menu-card rounded-2xl overflow-hidden bg-white shadow-lg transition-all duration-300 flex flex-col h-full">
+            <div
+              className="relative h-52 bg-cover bg-center"
+              style={{ backgroundImage: `url(${item.bgImg})` }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+              <div className="absolute bottom-3 left-4 bg-olive-deep/80 backdrop-blur-sm px-3 py-1 rounded-full text-white text-sm font-semibold">
+                {category === "dosas" && "🌿 Signature Dosa"}
+                {category === "uttapams" && "🍕 Specialty Uttapam"}
+                {category === "coffees" && "☕ Artisanal Brew"}
+              </div>
+            </div>
+            <div className="p-5 flex flex-col flex-grow">
+              <h3 className="text-xl font-bold text-olive tracking-tight">
+                {item.name}
+              </h3>
+              <p className="text-gray-600 text-sm mt-2 leading-relaxed flex-grow">
+                {item.desc}
+              </p>
+              <div className="mt-4 flex justify-between items-center pt-2">
+                <span className="text-2xl font-extrabold text-olive-deep">
+                  {item.price}
+                </span>
+                <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-3 py-1.5 rounded-full text-sm font-medium">
+                  <i className="fas fa-utensil-spoon text-sm"></i>
+                  <span>House Special</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      // Section component with elegant separation
+      const MenuSection = ({ title, icon, items, category }) => {
+        return (
+          <section
+            className="py-14 px-6 md:px-12 max-w-7xl mx-auto scroll-mt-20"
+            id={category}
+          >
+            <div className="flex items-center gap-3 mb-10 border-b-4 border-olive-deep pb-3 w-fit">
+              <i className={`${icon} text-3xl text-olive-deep`}></i>
+              <h2 className="text-3xl md:text-4xl font-bold text-olive-deep tracking-wide serif-head">
+                {title}
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 auto-rows-fr">
+              {items.map((item) => (
+                <MenuCard key={item.id} item={item} category={category} />
+              ))}
+            </div>
+          </section>
+        );
+      };
+
+      // Main App Component
+      const App = () => {
+        // WhatsApp number (India format, replace with actual cafe number)
+        const whatsappNumber = "+917019234567";
+        // Custom map for Bangalore Serenity (central location)
+        const customMap =
+          "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.797919331642!2d77.640899!3d12.9715987!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae167e8c9dafb3%3A0x9a23c9c8c1cfb4!2sSouth%20Indian%20Cafe%20District!5e0!3m2!1sen!2sin!4v1712400000000!5m2!1sen!2sin";
+
+        // State for random background image
+        const [heroBg, setHeroBg] = React.useState("");
+
+        React.useEffect(() => {
+          // Set random background image on component mount
+          setHeroBg(getRandomHeroBg());
+
+          // Structured data for SEO rich snippet
+          const seoScript = document.createElement("script");
+          seoScript.type = "application/ld+json";
+          seoScript.textContent = JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Restaurant",
+            name: "Bangalore Serenity",
+            image:
+              "https://images.unsplash.com/photo-1589301760014-37c6e4b994f6?w=1200",
+            description:
+              "Authentic South Indian cafe serving crispy dosas, uttapams, filter coffee & cold coffee in a serene olive-green themed ambiance. Best dosa in Bangalore.",
+            address: {
+              "@type": "PostalAddress",
+              streetAddress: "12th Main, Indiranagar",
+              addressLocality: "Bangalore",
+              addressRegion: "Karnataka",
+              postalCode: "560038",
+              addressCountry: "IN",
+            },
+            telephone: "+917019234567",
+            servesCuisine: "South Indian",
+            priceRange: "₹₹",
+            openingHours: "Mo-Su 08:00-22:30",
+          });
+          document.head.appendChild(seoScript);
+          return () => {
+            document.head.removeChild(seoScript);
+          };
+        }, []);
+
+        // Smooth scroll function for navigation
+        const scrollToSection = (sectionId) => {
+          const element = document.getElementById(sectionId);
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        };
+
+        return (
+          <div className="min-h-screen bg-olive-light">
+            {/* Hero Section with Random Background Image */}
+            <header
+              className="relative min-h-[88vh] flex items-center bg-cover bg-center bg-no-repeat transition-all duration-700"
+              style={{
+                backgroundImage: heroBg
+                  ? `url(${heroBg})`
+                  : "url('https://images.unsplash.com/photo-1589301760014-37c6e4b994f6?w=1600&h=900&fit=crop')",
+              }}
+            >
+              <div className="hero-overlay absolute inset-0"></div>
+              <div className="relative z-10 max-w-6xl mx-auto px-6 md:px-12 text-white">
+                <span className="inline-block bg-olive-deep/70 backdrop-blur-md text-sm uppercase tracking-wider px-4 py-1.5 rounded-full mb-5 font-semibold">
+                  ✨ Since 2015 ✨
+                </span>
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight serif-head">
+                  Bangalore <span className="text-amber-200">Serenity</span>
+                </h1>
+                <p className="text-lg md:text-2xl mt-5 max-w-2xl font-light drop-shadow-md">
+                  Where crispy Dosas meet aromatic Filter Kaapi — Experience the
+                  soul of South India in every bite.
+                </p>
+                <div className="flex flex-wrap gap-5 mt-9">
+                  <button
+                    onClick={() => scrollToSection("dosas")}
+                    className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-3 rounded-full font-semibold text-lg shadow-xl transition-all flex items-center gap-2 cursor-pointer"
+                  >
+                    <i className="fas fa-utensils"></i> Explore Specialities
+                  </button>
+                  <a
+                    href="https://wa.me/917019234567?text=Hello%20Bangalore%20Serenity%2C%20I'd%20like%20to%20order%20or%20know%20more!"
+                    target="_blank"
+                    className="bg-white text-zinc-500 hover:text-zinc-800 hover:bg-gray-100 px-8 py-3 rounded-full font-semibold text-lg shadow-lg transition-all flex items-center gap-2"
+                  >
+                    <i className="fab fa-whatsapp text-green-600 text-xl"></i>{" "}
+                    Order on WhatsApp
+                  </a>
+                </div>
+                <div className="mt-12 flex gap-6 text-sm md:text-base font-medium">
+                  <span>
+                    <i className="fas fa-map-marker-alt mr-1"></i> Indiranagar,
+                    Bangalore
+                  </span>
+                  <span>
+                    <i className="fas fa-clock mr-1"></i> 8 AM – 10:30 PM
+                  </span>
+                </div>
+              </div>
+            </header>
+
+            {/* Short intro / tagline separation */}
+            <div className="bg-white/70 backdrop-blur-sm py-8 border-y border-olive/20 shadow-sm">
+              <div className="max-w-6xl mx-auto px-6 text-center">
+                <p className="text-gray-700 md:text-lg italic font-medium">
+                  🌿 "Authentic family recipes — each dosa is a masterpiece,
+                  each cup of filter coffee transports you to the lush
+                  backwaters of Kerala & plantations of Coorg."
+                </p>
+              </div>
+            </div>
+
+            {/* Menu Sections with Card scaling & background images */}
+            <MenuSection
+              title="Signature Dosas"
+              icon="fas fa-egg"
+              items={menuItems.dosas}
+              category="dosas"
+            />
+            <div className="w-11/12 h-px bg-gradient-to-r from-transparent via-olive-deep/30 to-transparent mx-auto"></div>
+
+            <MenuSection
+              title="Uttapams - Soft & Savory"
+              icon="fas fa-carrot"
+              items={menuItems.uttapams}
+              category="uttapams"
+            />
+            <div className="w-11/12 h-px bg-gradient-to-r from-transparent via-olive-deep/30 to-transparent mx-auto"></div>
+
+            <MenuSection
+              title="Filter Coffee & Cold Brews"
+              icon="fas fa-mug-hot"
+              items={menuItems.coffees}
+              category="coffees"
+            />
+
+            {/* Google Maps + Contact + WhatsApp Integration Section */}
+            <section className="py-16 px-6 md:px-12 bg-white rounded-t-3xl mt-6 shadow-inner">
+              <div className="max-w-6xl mx-auto">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                  {/* Map area */}
+                  <div>
+                    <h3 className="text-2xl md:text-3xl font-bold text-olive-deep serif-head flex items-center gap-2 mb-5">
+                      <i className="fas fa-map-pin text-red-600"></i> Visit our
+                      Serenity Corner
+                    </h3>
+                    <div className="rounded-2xl overflow-hidden shadow-2xl border-4 border-white">
+                      <iframe
+                        src={customMap}
+                        width="100%"
+                        height="350"
+                        style={{ border: 0 }}
+                        allowFullScreen=""
+                        loading="lazy"
+                        className="w-full"
+                        title="Bangalore Serenity Cafe Location"
+                      ></iframe>
+                    </div>
+                    <p className="text-sm text-gray-500 mt-4 flex items-center gap-1">
+                      <i className="fas fa-location-dot text-olive-deep"></i>{" "}
+                      298, 12th Main, Indiranagar, Bengaluru - 560038 (next to
+                      Green Park)
+                    </p>
+                  </div>
+
+                  {/* Contact & WhatsApp List */}
+                  <div className="bg-olive-light p-8 rounded-2xl shadow-md border border-olive/20">
+                    <h3 className="text-2xl font-bold text-olive-deep serif-head mb-3">
+                      Get in Touch
+                    </h3>
+                    <p className="text-gray-600 mb-5">
+                      Reservations, bulk orders, or just a foodie query — reach
+                      out anytime!
+                    </p>
+                    <div className="space-y-5">
+                      <div className="flex items-center gap-4 bg-white p-3 rounded-xl shadow-sm">
+                        <i className="fab fa-whatsapp text-3xl text-green-600"></i>
+                        <div>
+                          <p className="font-semibold">
+                            WhatsApp (Priority Order)
+                          </p>
+                          <a
+                            href="https://wa.me/917019234567?text=Hi%20Bangalore%20Serenity%2C%20I'd%20like%20to%20place%20an%20order."
+                            target="_blank"
+                            className="text-olive-deep font-medium hover:underline"
+                          >
+                            +91 70192 34567
+                          </a>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4 bg-white p-3 rounded-xl shadow-sm">
+                        <i className="fas fa-phone-alt text-2xl text-olive-deep"></i>
+                        <div>
+                          <p className="font-semibold">
+                            Call / Delivery Support
+                          </p>
+                          <a href="tel:+918042567890" className="text-gray-700">
+                            +91 80425 67890
+                          </a>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4 bg-white p-3 rounded-xl shadow-sm">
+                        <i className="fas fa-envelope text-2xl text-amber-700"></i>
+                        <div>
+                          <p className="font-semibold">Email</p>
+                          <a
+                            href="mailto:hello@bangaloreserenity.com"
+                            className="text-gray-700"
+                          >
+                            hello@bangaloreserenity.com
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-8 pt-4 border-t border-olive/20">
+                      <div className="flex gap-4">
+                        <a
+                          href="https://www.instagram.com/"
+                          target="_blank"
+                          className="bg-olive-deep/10 p-3 rounded-full hover:bg-olive-deep/20 transition"
+                        >
+                          <i className="fab fa-instagram text-2xl text-olive-deep"></i>
+                        </a>
+                        <a
+                          href="#"
+                          target="_blank"
+                          className="bg-olive-deep/10 p-3 rounded-full hover:bg-olive-deep/20 transition"
+                        >
+                          <i className="fab fa-facebook text-2xl text-olive-deep"></i>
+                        </a>
+                        <a
+                          href="#"
+                          target="_blank"
+                          className="bg-olive-deep/10 p-3 rounded-full hover:bg-olive-deep/20 transition"
+                        >
+                          <i className="fab fa-twitter text-2xl text-olive-deep"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* SEO / Popularity Enhancer: Testimonials + Why Us */}
+            <section className="py-14 px-6 max-w-6xl mx-auto">
+              <div className="text-center mb-10">
+                <h2 className="text-3xl font-bold text-olive-deep serif-head">
+                  Why Our Guests Love Us
+                </h2>
+                <div className="w-24 h-1 bg-amber-500 mx-auto mt-2 rounded-full"></div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="bg-white p-6 rounded-xl shadow hover:shadow-xl transition">
+                  <i className="fas fa-leaf text-3xl text-olive-deep mb-3"></i>
+                  <h3 className="text-xl font-bold">Farm-Fresh Ingredients</h3>
+                  <p className="text-gray-600 mt-2">
+                    Locally sourced veggies & authentic spices for that earthy
+                    South Indian flavor.
+                  </p>
+                </div>
+                <div className="bg-white p-6 rounded-xl shadow hover:shadow-xl transition">
+                  <i className="fas fa-mug-saucer text-3xl text-amber-700 mb-3"></i>
+                  <h3 className="text-xl font-bold">
+                    Filter Coffee Perfection
+                  </h3>
+                  <p className="text-gray-600 mt-2">
+                    Made with traditional brass filter, 100% pure chicory blend
+                    & served with froth.
+                  </p>
+                </div>
+                <div className="bg-white p-6 rounded-xl shadow hover:shadow-xl transition">
+                  <i className="fas fa-tree text-3xl text-olive-deep mb-3"></i>
+                  <h3 className="text-xl font-bold">
+                    Prime Location, Lush Greenery
+                  </h3>
+                  <p className="text-gray-600 mt-2">
+                    Nestled in the heart of the city, surrounded by serene
+                    greenery & absolute peace — your urban escape.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* Footer with copyright and quick links */}
+            <footer className="bg-olive-deep text-white/90 py-8 mt-8">
+              <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <i className="fas fa-utensil-spoon text-amber-300"></i>
+                  <span className="font-semibold serif-head text-xl">
+                    Bangalore Serenity
+                  </span>
+                </div>
+                <div className="text-sm text-center">
+                  © 2025 | Authentic South Indian Flavors | Dosa, Uttapam &
+                  Filter Coffee Experts
+                </div>
+                <div className="flex gap-5">
+                  <button
+                    onClick={() =>
+                      document
+                        .getElementById("dosas")
+                        ?.scrollIntoView({ behavior: "smooth" })
+                    }
+                    className="hover:text-amber-300 transition cursor-pointer"
+                  >
+                    Dosas
+                  </button>
+                  <button
+                    onClick={() =>
+                      document
+                        .getElementById("uttapams")
+                        ?.scrollIntoView({ behavior: "smooth" })
+                    }
+                    className="hover:text-amber-300 transition cursor-pointer"
+                  >
+                    Uttapams
+                  </button>
+                  <button
+                    onClick={() =>
+                      document
+                        .getElementById("coffees")
+                        ?.scrollIntoView({ behavior: "smooth" })
+                    }
+                    className="hover:text-amber-300 transition cursor-pointer"
+                  >
+                    Coffees
+                  </button>
+                </div>
+              </div>
+              <div className="text-center text-xs text-white/50 mt-5">
+                🌿 Lush green vibes | Best cafe near me for South Indian
+                breakfast | SEO optimized for "Bangalore Serenity cafe dosa"
+              </div>
+            </footer>
+
+            {/* floating WhatsApp button for extra visibility */}
+            <a
+              href="https://wa.me/917019234567?text=Hi%21%20I%20want%20to%20order%20delicious%20dosas%20from%20Bangalore%20Serenity"
+              target="_blank"
+              className="fixed bottom-6 right-6 bg-[#25D366] text-white p-4 rounded-full shadow-2xl z-50 hover:scale-110 transition-transform duration-200 flex items-center justify-center"
+            >
+              <i className="fab fa-whatsapp text-3xl"></i>
+            </a>
+          </div>
+        );
+      };
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
+</html>
